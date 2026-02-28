@@ -1,0 +1,72 @@
+{
+  "languages": {
+    "en": "Englisch",
+    "fr": "Französisch",
+    "pt-BR": "Portugiesisch (Brasilien)",
+    "es": "Spanisch",
+    "de": "Deutsch"
+  },
+  "controls": {
+    "translate": "Übersetzen",
+    "translating": "Wird übersetzt...",
+    "revert": "Zurücksetzen",
+    "reverting": "Wird zurückgesetzt...",
+    "selectLanguage": "Sprache auswählen",
+    "translateTo": "Übersetzen nach {{language}}",
+    "currentLanguage": "Aktuelle Sprache: {{language}}",
+    "originalLanguage": "Originalsprache",
+    "translatedTo": "Übersetzt nach {{language}}"
+  },
+  "status": {
+    "translating": "Inhalt wird übersetzt...",
+    "translated": "Erfolgreich übersetzt",
+    "reverting": "Wird zur Originalsprache zurückgesetzt...",
+    "reverted": "Zur Originalsprache zurückgesetzt",
+    "cached": "Übersetzung im Cache (schnell)",
+    "fresh": "Neue Übersetzung (kann einige Sekunden dauern)"
+  },
+  "errors": {
+    "translationFailed": "Übersetzung fehlgeschlagen",
+    "translationFailedDescription": "Der Inhalt konnte nicht übersetzt werden. Bitte versuchen Sie es erneut.",
+    "revertFailed": "Zurücksetzen fehlgeschlagen",
+    "revertFailedDescription": "Zurücksetzen zur Originalsprache nicht möglich.",
+    "languageNotSupported": "Sprache nicht unterstützt",
+    "noContentToTranslate": "Kein Inhalt zum Übersetzen",
+    "rateLimitError": "Ratenlimit erreicht",
+    "rateLimitErrorDescription": "Zu viele Übersetzungsanfragen. Bitte warten Sie einen Moment.",
+    "networkError": "Netzwerkfehler",
+    "networkErrorDescription": "Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "invalidContent": "Ungültiger Inhalt",
+    "invalidContentDescription": "Der Inhalt konnte nicht für die Übersetzung verarbeitet werden."
+  },
+  "messages": {
+    "selectLanguageToTranslate": "Wählen Sie eine Sprache aus, um diesen Inhalt zu übersetzen",
+    "translationInProgress": "Übersetzung läuft, bitte warten...",
+    "translationComplete": "Übersetzung abgeschlossen!",
+    "viewingTranslation": "Übersetzung in {{language}} wird angezeigt",
+    "viewingOriginal": "Originalinhalt wird angezeigt",
+    "noTranslationsAvailable": "Keine Übersetzungen verfügbar",
+    "availableTranslations": "Verfügbare Übersetzungen: {{languages}}",
+    "translationCached": "Diese Übersetzung wurde aus dem Cache geladen"
+  },
+  "contentTypes": {
+    "roadmap": "Roadmap",
+    "idea": "Idee",
+    "changelog": "Changelog",
+    "spec": "Spezifikation"
+  },
+  "actions": {
+    "clearTranslations": "Übersetzungen löschen",
+    "clearingTranslations": "Übersetzungen werden gelöscht...",
+    "translationsCleared": "Übersetzungen gelöscht",
+    "confirmClearTranslations": "Sind Sie sicher, dass Sie alle Übersetzungen für diesen Inhalt löschen möchten?",
+    "retryTranslation": "Übersetzung wiederholen"
+  },
+  "accessibility": {
+    "translateButtonAriaLabel": "Inhalt nach {{language}} übersetzen",
+    "revertButtonAriaLabel": "Zur Originalsprache zurücksetzen",
+    "languageSelectorAriaLabel": "Übersetzungssprache auswählen",
+    "translationStatusAriaLabel": "Übersetzungsstatus: {{status}}",
+    "clearTranslationsAriaLabel": "Alle Übersetzungen löschen"
+  }
+}
