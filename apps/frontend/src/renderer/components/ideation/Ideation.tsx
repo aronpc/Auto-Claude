@@ -8,6 +8,7 @@ import { IdeationDialogs } from './IdeationDialogs';
 import { GenerationProgressScreen } from './GenerationProgressScreen';
 import { IdeaCard } from './IdeaCard';
 import { IdeaDetailPanel } from './IdeaDetailPanel';
+import { TranslationControl } from '../translation/TranslationControl';
 import { useIdeation } from './hooks/useIdeation';
 import { useViewState } from '../../contexts/ViewStateContext';
 import { ALL_IDEATION_TYPES } from './constants';
@@ -209,6 +210,28 @@ export function Ideation({ projectId, onGoToTask }: IdeationProps) {
           })}
         </IdeationFilters>
       </div>
+
+      {/* Translation Control - shown when an idea is selected */}
+      {selectedIdea && (
+        <div className="px-4 py-3 border-b bg-background">
+          <TranslationControl
+            contentType="idea"
+            contentId={selectedIdea.id}
+            content={selectedIdea as unknown as Record<string, unknown>}
+            onTranslated={(translatedContent) => {
+              setSelectedIdea(translatedContent as unknown as typeof selectedIdea);
+            }}
+            onReverted={() => {
+              // Revert to original idea from session
+              const originalIdea = session?.ideas.find(i => i.id === selectedIdea.id);
+              if (originalIdea) {
+                setSelectedIdea(originalIdea);
+              }
+            }}
+            compact
+          />
+        </div>
+      )}
 
       {/* Idea Detail Panel */}
       {selectedIdea && (

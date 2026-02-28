@@ -245,9 +245,13 @@ describe('PythonEnvManager', () => {
     describe('validateVenvWritePermissions', () => {
       it('should return valid when directory is writable', async () => {
         // Mock fs.access to succeed (no error)
-        vi.mocked(fs.access).mockImplementation((path: any, mode: any, callback: any) => {
-          callback(null);
-        });
+        vi.mocked(fs.access).mockImplementation(((path: any, mode: any, callback: any) => {
+          if (typeof mode === 'function') {
+            mode(null);
+          } else {
+            callback(null);
+          }
+        }) as any);
         vi.mocked(fs.existsSync).mockReturnValue(true);
 
         const result = await (manager as any)['validateVenvWritePermissions']('/writable/path');
@@ -257,9 +261,13 @@ describe('PythonEnvManager', () => {
       });
 
       it('should return error when directory not writable', async () => {
-        vi.mocked(fs.access).mockImplementation((path: any, mode: any, callback: any) => {
-          callback(new Error('EACCES: permission denied'));
-        });
+        vi.mocked(fs.access).mockImplementation(((path: any, mode: any, callback: any) => {
+          if (typeof mode === 'function') {
+            mode(new Error('EACCES: permission denied'));
+          } else {
+            callback(new Error('EACCES: permission denied'));
+          }
+        }) as any);
         vi.mocked(fs.existsSync).mockReturnValue(true);
 
         const result = await (manager as any)['validateVenvWritePermissions']('/readonly/path');
@@ -269,9 +277,13 @@ describe('PythonEnvManager', () => {
       });
 
       it('should include chmod hint on Linux when not writable', async () => {
-        vi.mocked(fs.access).mockImplementation((path: any, mode: any, callback: any) => {
-          callback(new Error('EACCES'));
-        });
+        vi.mocked(fs.access).mockImplementation(((path: any, mode: any, callback: any) => {
+          if (typeof mode === 'function') {
+            mode(new Error('EACCES'));
+          } else {
+            callback(new Error('EACCES'));
+          }
+        }) as any);
         vi.mocked(fs.existsSync).mockReturnValue(true);
         vi.mocked(isLinux).mockReturnValue(true);
 
@@ -282,9 +294,13 @@ describe('PythonEnvManager', () => {
       });
 
       it('should include Windows hint when not writable on Windows', async () => {
-        vi.mocked(fs.access).mockImplementation((path: any, mode: any, callback: any) => {
-          callback(new Error('EACCES'));
-        });
+        vi.mocked(fs.access).mockImplementation(((path: any, mode: any, callback: any) => {
+          if (typeof mode === 'function') {
+            mode(new Error('EACCES'));
+          } else {
+            callback(new Error('EACCES'));
+          }
+        }) as any);
         vi.mocked(fs.existsSync).mockReturnValue(true);
         vi.mocked(isLinux).mockReturnValue(false);
         vi.mocked(isWindows).mockReturnValue(true);
@@ -305,10 +321,14 @@ describe('PythonEnvManager', () => {
           return existsCallCount > 2; // Return false for first two calls, true after
         });
 
-        vi.mocked(fs.mkdirSync).mockImplementation(() => {});
-        vi.mocked(fs.access).mockImplementation((path: any, mode: any, callback: any) => {
-          callback(null); // Writable
-        });
+        vi.mocked(fs.mkdirSync).mockImplementation((() => undefined) as any);
+        vi.mocked(fs.access).mockImplementation(((path: any, mode: any, callback: any) => {
+          if (typeof mode === 'function') {
+            mode(null);
+          } else {
+            callback(null);
+          }
+        }) as any);
 
         const result = await (manager as any)['validateVenvWritePermissions']('/new/path/venv');
 

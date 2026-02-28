@@ -36,7 +36,6 @@
     "repositoryVisibilityAriaLabel": "Visibilidade do repositório",
     "opensInNewWindow": "abre em nova janela",
     "visitExternalLink": "Visitar {{name}} (abre em nova janela)",
-    "upgradeSubscriptionAriaLabel": "Atualizar assinatura (abre em nova janela)",
     "upgradeSubscriptionAriaLabel": "Fazer upgrade da assinatura (abre em nova janela)",
     "learnMoreAriaLabel": "Saiba mais (abre em nova janela)",
     "toggleFolder": "Alternar pasta {{name}}",

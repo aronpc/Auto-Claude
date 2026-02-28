@@ -10,6 +10,7 @@ import { RoadmapHeader } from './roadmap/RoadmapHeader';
 import { RoadmapEmptyState } from './roadmap/RoadmapEmptyState';
 import { RoadmapTabs } from './roadmap/RoadmapTabs';
 import { FeatureDetailPanel } from './roadmap/FeatureDetailPanel';
+import { TranslationControl } from './translation/TranslationControl';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -136,6 +137,28 @@ export function Roadmap({ projectId, onGoToTask }: RoadmapProps) {
         onRefresh={handleRefresh}
         onViewCompetitorAnalysis={() => setShowCompetitorViewer(true)}
       />
+
+      {/* Translation Control - shown when a feature is selected */}
+      {selectedFeature && (
+        <div className="px-4 py-3 border-b bg-background">
+          <TranslationControl
+            contentType="roadmap"
+            contentId={selectedFeature.id}
+            content={selectedFeature as unknown as Record<string, unknown>}
+            onTranslated={(translatedContent) => {
+              setSelectedFeature(translatedContent as unknown as RoadmapFeature);
+            }}
+            onReverted={() => {
+              // Revert to original feature from roadmap
+              const originalFeature = roadmap.features.find(f => f.id === selectedFeature.id);
+              if (originalFeature) {
+                setSelectedFeature(originalFeature);
+              }
+            }}
+            compact={true}
+          />
+        </div>
+      )}
 
       {/* Content */}
       <div className="flex-1 min-h-0 overflow-hidden">

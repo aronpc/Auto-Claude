@@ -1,0 +1,28 @@
+{
+  "errors": {
+    "noLanguageSelected": "Veuillez sélectionner une langue",
+    "translationFailed": "Échec de la traduction"
+  },
+  "languages": {
+    "pt-BR": "Portugais (Brésil)",
+    "es": "Espagnol",
+    "de": "Allemand",
+    "fr": "Français"
+  },
+  "accessibility": {
+    "translateButtonAriaLabel": "Traduire le contenu",
+    "revertButtonAriaLabel": "Revenir à la langue d'origine",
+    "languageSelectorAriaLabel": "Sélectionner la langue cible"
+  },
+  "status": {
+    "translating": "Traduction en cours...",
+    "translated": "Traduction terminée"
+  },
+  "actions": {
+    "translate": "Traduire",
+    "revert": "Revenir"
+  },
+  "controls": {
+    "selectLanguage": "Sélectionner la langue"
+  }
+}
