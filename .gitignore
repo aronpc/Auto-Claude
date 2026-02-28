@@ -57,6 +57,7 @@ lerna-debug.log*
 # Auto Claude Generated
 # ===========================
 .auto-claude/
+.auto-claude/translations/
 .planning/
 .planning-archive/
 .auto-build-security.json

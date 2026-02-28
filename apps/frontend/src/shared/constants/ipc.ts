@@ -581,6 +581,12 @@ export const IPC_CHANNELS = {
   SCREENSHOT_GET_SOURCES: 'screenshot:getSources',  // Get available screens/windows
   SCREENSHOT_CAPTURE: 'screenshot:capture',          // Capture screenshot from source
 
+  // Translation operations
+  TRANSLATION_TRANSLATE: 'translation:translate',        // Translate content to target language
+  TRANSLATION_REVERT: 'translation:revert',              // Revert to original language
+  TRANSLATION_GET_AVAILABLE: 'translation:getAvailable', // Get available translations for content
+  TRANSLATION_CLEAR: 'translation:clear',                // Clear all translations for content
+
   // Queue routing (rate limit recovery)
   QUEUE_GET_RUNNING_TASKS_BY_PROFILE: 'queue:getRunningTasksByProfile',
   QUEUE_GET_BEST_PROFILE_FOR_TASK: 'queue:getBestProfileForTask',
