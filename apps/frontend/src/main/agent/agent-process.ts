@@ -27,6 +27,7 @@ import { getAugmentedEnv } from '../env-utils';
 import { getToolInfo, getClaudeCliPathForSdk } from '../cli-tool-manager';
 import { killProcessGracefully, isWindows, getPathDelimiter } from '../platform';
 import { debugLog } from '../../shared/utils/debug-logger';
+import { getAppLanguage } from '../app-language';
 
 /**
  * Type for supported CLI tools
@@ -1026,8 +1027,11 @@ export class AgentProcessManager {
     const projectFileEnv = this.loadProjectEnv(projectPath);
     const projectSettingsEnv = this.getProjectEnvVars(projectPath);
 
-    // Priority: app-wide memory -> backend .env -> project .env -> project settings
+    // Pass the user's chosen app language to backend agents
+    const languageEnv: Record<string, string> = { APP_LANGUAGE: getAppLanguage() };
+
+    // Priority: app-wide memory -> backend .env -> project .env -> project settings -> language
     // Later sources override earlier ones
-    return { ...memoryEnv, ...autoBuildEnv, ...projectFileEnv, ...projectSettingsEnv };
+    return { ...memoryEnv, ...autoBuildEnv, ...projectFileEnv, ...projectSettingsEnv, ...languageEnv };
   }
 }

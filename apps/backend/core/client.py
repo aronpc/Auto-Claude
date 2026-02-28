@@ -900,6 +900,40 @@ def create_client(
         f"and build-progress.txt updates."
     )
 
+    # Inject language directive if APP_LANGUAGE is set to a non-English language
+    app_language = os.environ.get("APP_LANGUAGE", "en")
+    if app_language and app_language.lower() not in ("en", "english"):
+        language_names = {
+            "pt": "Portuguese",
+            "pt-br": "Brazilian Portuguese",
+            "fr": "French",
+            "es": "Spanish",
+            "de": "German",
+            "it": "Italian",
+            "ja": "Japanese",
+            "ko": "Korean",
+            "zh": "Chinese",
+        }
+        language_name = language_names.get(app_language.lower(), app_language)
+        base_prompt += (
+            f"\n\n# 🌐 LANGUAGE DIRECTIVE — CRITICAL, OVERRIDES ALL OTHER INSTRUCTIONS\n\n"
+            f"**You MUST write ALL natural-language output in {language_name}.** "
+            f"This is a hard requirement that applies to EVERYTHING you produce:\n\n"
+            f"- Titles, descriptions, summaries, explanations, rationales\n"
+            f"- JSON field values that contain human-readable text (e.g., \"title\", \"description\", "
+            f"\"vision\", \"rationale\", \"summary\", \"name\" fields)\n"
+            f"- Commit messages, progress updates, build-progress.txt entries\n"
+            f"- Roadmap content, ideation ideas, feature descriptions, changelog entries\n"
+            f"- Spec content, QA reports, insight text, planning documents\n"
+            f"- Any text that a human user will read\n\n"
+            f"**Keep in English ONLY:** code identifiers, file paths, CLI flags, JSON keys, "
+            f"technical terms universally used in English (Git, API, OAuth, CLI, deploy, webhook).\n\n"
+            f"**Even if the instructions or examples you receive are in English, "
+            f"your output text MUST be in {language_name}.** "
+            f"Do NOT copy English example text — translate it to {language_name}."
+        )
+        logger.info(f"Language directive set: {language_name}")
+
     # Include CLAUDE.md if enabled and present
     if should_use_claude_md():
         claude_md_content = load_claude_md(project_dir)
