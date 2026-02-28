@@ -374,15 +374,15 @@ describe('PythonEnvManager', () => {
 
         const promise = (manager as any)['retryWithBackoff'](operation, 3, 100);
 
+        // IMPORTANT: Set up expectation BEFORE advancing timers
+        const expectation = expect(promise).rejects.toThrow('Always fails');
+
         // Advance timers for each retry
         await vi.advanceTimersByTimeAsync(100); // First retry after 100ms
         await vi.advanceTimersByTimeAsync(200); // Second retry after 200ms
 
-        try {
-          await promise;
-        } catch {
-          // Expected to fail
-        }
+        // Wait for expectation to complete
+        await expectation;
 
         // Should call cleanup 2 times (before retry 2 and retry 3)
         expect(cleanupSpy).toHaveBeenCalledTimes(2);
@@ -397,11 +397,15 @@ describe('PythonEnvManager', () => {
 
         const promise = (manager as any)['retryWithBackoff'](operation, 3, 100);
 
+        // IMPORTANT: Set up expectation BEFORE advancing timers
+        const expectation = expect(promise).rejects.toThrow('Persistent failure');
+
         // Advance timers for each retry
         await vi.advanceTimersByTimeAsync(100); // First retry after 100ms
         await vi.advanceTimersByTimeAsync(200); // Second retry after 200ms
 
-        await expect(promise).rejects.toThrow('Persistent failure');
+        // Wait for expectation to complete
+        await expectation;
 
         expect(operation).toHaveBeenCalledTimes(3);
       });
