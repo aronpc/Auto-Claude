@@ -1,5 +1,5 @@
 import { spawn, execSync, ChildProcess } from 'child_process';
-import { existsSync, readdirSync, access, constants, mkdirSync } from 'fs';
+import { existsSync, readdirSync, access, constants, mkdirSync, rmSync } from 'fs';
 import path from 'path';
 import { EventEmitter } from 'events';
 import { app } from 'electron';
@@ -398,9 +398,94 @@ if sys.version_info >= (3, 12):
   }
 
   /**
-   * Create the virtual environment
+   * Clean up partial or corrupted venv directory.
+   * This is called before retrying venv creation to ensure a clean slate.
+   *
+   * @param venvPath - The path to the venv directory to clean up
+   */
+  private cleanupPartialVenv(venvPath: string): void {
+    try {
+      if (existsSync(venvPath)) {
+        console.warn(`[PythonEnvManager] Cleaning up partial venv at: ${venvPath}`);
+        rmSync(venvPath, { recursive: true, force: true });
+        console.warn(`[PythonEnvManager] Successfully cleaned up partial venv`);
+      }
+    } catch (error) {
+      console.error(`[PythonEnvManager] Failed to clean up partial venv:`, error);
+      // Don't throw - we'll let the retry attempt anyway
+    }
+  }
+
+  /**
+   * Retry wrapper with exponential backoff.
+   * Retries an operation up to maxRetries times with exponentially increasing delays.
+   * Cleans up partial venv before each retry attempt.
+   *
+   * @param operation - The async operation to retry
+   * @param maxRetries - Maximum number of retry attempts (default: 3)
+   * @param baseDelay - Base delay in milliseconds (default: 1000ms = 1s)
+   * @returns The result of the operation
+   * @throws The last error if all retries are exhausted
+   */
+  private async retryWithBackoff<T>(
+    operation: () => Promise<T>,
+    maxRetries: number = 3,
+    baseDelay: number = 1000
+  ): Promise<T> {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        // If this is the last attempt, throw the error
+        if (attempt === maxRetries - 1) {
+          throw error;
+        }
+
+        // Calculate exponential backoff delay: 1s, 2s, 4s
+        const delay = baseDelay * Math.pow(2, attempt);
+        console.warn(
+          `[PythonEnvManager] Attempt ${attempt + 1}/${maxRetries} failed. Retrying in ${delay}ms...`
+        );
+
+        // Clean up partial venv before retry
+        const venvPath = this.getVenvBasePath();
+        if (venvPath) {
+          this.cleanupPartialVenv(venvPath);
+        }
+
+        // Wait before retrying
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    // This should never be reached due to the throw in the loop, but TypeScript needs it
+    throw new Error('Max retries exceeded');
+  }
+
+  /**
+   * Create the virtual environment with retry logic and exponential backoff.
+   * Retries up to 3 times with delays of 1s, 2s, 4s to handle transient failures.
+   * Cleans up partial venv directories before each retry attempt.
    */
   private async createVenv(): Promise<boolean> {
+    try {
+      return await this.retryWithBackoff(
+        () => this.createVenvInternal(),
+        3, // maxRetries
+        1000 // baseDelay (1s)
+      );
+    } catch (error) {
+      // All retries exhausted - error has already been emitted by createVenvInternal
+      console.error('[PythonEnvManager] Venv creation failed after all retries');
+      return false;
+    }
+  }
+
+  /**
+   * Internal method to create the virtual environment (without retry logic).
+   * This is wrapped by createVenv() which adds retry logic with exponential backoff.
+   */
+  private async createVenvInternal(): Promise<boolean> {
     if (!this.autoBuildSourcePath) return false;
 
     const systemPython = this.findSystemPython();
