@@ -458,7 +458,28 @@ if sys.version_info >= (3, 12):
         if (!resolved) {
           resolved = true;
           console.error('[PythonEnvManager] Venv creation timed out after', PythonEnvManager.VENV_CREATION_TIMEOUT_MS, 'ms');
-          this.emit('error', 'Virtual environment creation timed out. This may indicate a system issue.');
+
+          const timeoutErrorMsg =
+            `Python virtual environment creation timed out after ${PythonEnvManager.VENV_CREATION_TIMEOUT_MS / 1000} seconds.\n\n` +
+            `This usually indicates:\n` +
+            `- Slow disk I/O or insufficient disk space\n` +
+            `- Antivirus software blocking Python operations\n` +
+            `- System resource constraints (low memory or CPU)\n\n` +
+            `Possible solutions:\n` +
+            `- Ensure you have at least 500MB of free disk space\n` +
+            `- Temporarily disable antivirus and try again\n` +
+            (isWindows()
+              ? `- Check Windows Defender exclusions for the application directory\n` +
+                `- Run the application as administrator if you're on a restricted system\n`
+              : '') +
+            (isLinux()
+              ? `- Check available disk space with 'df -h'\n` +
+                `- Verify Python installation with 'python3 --version'\n`
+              : '') +
+            `- Restart the application and try again\n` +
+            `- If the issue persists, check system logs for related errors`;
+
+          this.emit('error', timeoutErrorMsg);
           try {
             proc.kill();
           } catch {
@@ -484,7 +505,32 @@ if sys.version_info >= (3, 12):
           resolve(true);
         } else {
           console.error('[PythonEnvManager] Failed to create venv:', stderr);
-          this.emit('error', `Failed to create virtual environment: ${stderr}`);
+
+          const venvErrorMsg =
+            `Failed to create Python virtual environment.\n\n` +
+            `Error details: ${stderr || 'No error output available'}\n\n` +
+            `Common causes and solutions:\n` +
+            `- Python 'venv' module missing:\n` +
+            (isLinux()
+              ? `  • On Debian/Ubuntu: sudo apt install python3-venv\n` +
+                `  • On Fedora/RHEL: sudo dnf install python3-venv\n`
+              : `  • Reinstall Python 3.10+ from https://www.python.org/downloads/\n` +
+                `  • Ensure you select "Add Python to PATH" during installation\n`) +
+            `- Insufficient permissions:\n` +
+            (isLinux()
+              ? `  • Check directory permissions with 'ls -la'\n` +
+                `  • Use 'chmod' to add write permissions if needed\n`
+              : '') +
+            (isWindows()
+              ? `  • Run the application as administrator\n` +
+                `  • Check folder permissions in Properties > Security\n`
+              : '') +
+            `- Disk space:\n` +
+            `  • Ensure at least 500MB of free disk space is available\n` +
+            `- Corrupted Python installation:\n` +
+            `  • Try reinstalling Python 3.10 or higher`;
+
+          this.emit('error', venvErrorMsg);
           resolve(false);
         }
       });
@@ -496,7 +542,31 @@ if sys.version_info >= (3, 12):
         this.activeProcesses.delete(proc);
 
         console.error('[PythonEnvManager] Error creating venv:', err);
-        this.emit('error', `Failed to create virtual environment: ${err.message}`);
+
+        const processErrorMsg =
+          `Failed to start Python virtual environment creation process.\n\n` +
+          `Error: ${err.message}\n\n` +
+          `This usually means:\n` +
+          `- Python executable not found or not accessible\n` +
+          `- Python installation is corrupted\n` +
+          `- System security software is blocking Python execution\n\n` +
+          `Recommended actions:\n` +
+          `1. Verify Python installation:\n` +
+          (isWindows()
+            ? `   • Open Command Prompt and run: python --version\n` +
+              `   • Should show Python 3.10 or higher\n`
+            : `   • Open terminal and run: python3 --version\n` +
+              `   • Should show Python 3.10 or higher\n`) +
+          `2. Reinstall Python if version is incorrect or command not found:\n` +
+          `   • Download from: https://www.python.org/downloads/\n` +
+          (isWindows()
+            ? `   • During installation, check "Add Python to PATH"\n`
+            : '') +
+          `3. Check antivirus/security software settings:\n` +
+          `   • Add Python to the allowlist/exclusions\n` +
+          `4. Restart the application after fixing Python installation`;
+
+        this.emit('error', processErrorMsg);
         resolve(false);
       });
     });
@@ -551,12 +621,41 @@ if sys.version_info >= (3, 12):
     const requirementsPath = path.join(this.autoBuildSourcePath, 'requirements.txt');
 
     if (!venvPython || !existsSync(venvPython)) {
-      this.emit('error', 'Python not found in virtual environment');
+      const pythonNotFoundMsg =
+        `Python executable not found in virtual environment.\n\n` +
+        `Expected location: ${venvPython || 'undefined'}\n\n` +
+        `This indicates the virtual environment was not created successfully.\n\n` +
+        `Possible solutions:\n` +
+        `- Restart the application to recreate the virtual environment\n` +
+        `- Delete the virtual environment directory and let the app recreate it:\n` +
+        `  Directory: ${this.getVenvBasePath() || 'undefined'}\n` +
+        `- Ensure Python 3.10+ is installed on your system\n` +
+        `- Check available disk space (need at least 500MB)\n` +
+        `- If the issue persists, reinstall the application`;
+
+      this.emit('error', pythonNotFoundMsg);
       return false;
     }
 
     if (!existsSync(requirementsPath)) {
-      this.emit('error', 'requirements.txt not found');
+      const requirementsNotFoundMsg =
+        `Python dependencies file not found.\n\n` +
+        `Expected location: ${requirementsPath}\n\n` +
+        `This indicates the application installation is incomplete or corrupted.\n\n` +
+        `Required actions:\n` +
+        `1. Verify application integrity:\n` +
+        (app.isPackaged
+          ? `   • Reinstall the application from the official download\n` +
+            `   • Ensure the installation completed without errors\n`
+          : `   • Check that apps/backend/requirements.txt exists in the project\n` +
+            `   • Run 'git status' to verify repository integrity\n` +
+            `   • Try 'git checkout apps/backend/requirements.txt' to restore the file\n`) +
+        `2. If reinstalling doesn't help:\n` +
+        `   • Check antivirus logs - it may have quarantined files\n` +
+        `   • Temporarily disable antivirus and reinstall\n` +
+        `3. Contact support if the issue persists`;
+
+      this.emit('error', requirementsNotFoundMsg);
       return false;
     }
 
@@ -599,14 +698,101 @@ if sys.version_info >= (3, 12):
           resolve(true);
         } else {
           console.error('[PythonEnvManager] Failed to install deps:', stderr || stdout);
-          this.emit('error', `Failed to install dependencies: ${stderr || stdout}`);
+
+          // Parse common pip errors for better messaging
+          const output = stderr || stdout || 'No error output available';
+          const isNetworkError = output.includes('Could not fetch URL') ||
+                                 output.includes('Network is unreachable') ||
+                                 output.includes('Connection timeout');
+          const isPermissionError = output.includes('Permission denied') ||
+                                   output.includes('EACCES');
+          const isDiskSpaceError = output.includes('No space left on device') ||
+                                  output.includes('ENOSPC');
+
+          let installErrorMsg = `Failed to install Python dependencies.\n\n`;
+
+          if (isNetworkError) {
+            installErrorMsg +=
+              `Network connection issue detected.\n\n` +
+              `Possible solutions:\n` +
+              `- Check your internet connection\n` +
+              `- Verify firewall settings allow Python/pip to access the internet\n` +
+              `- Try using a different network (e.g., disable VPN if active)\n` +
+              `- If behind a corporate proxy, configure pip proxy settings:\n` +
+              `  pip config set global.proxy http://your-proxy:port\n` +
+              `- Wait a few minutes and try again (PyPI may be temporarily down)\n\n`;
+          } else if (isPermissionError) {
+            installErrorMsg +=
+              `Permission denied error detected.\n\n` +
+              `Possible solutions:\n` +
+              (isWindows()
+                ? `- Run the application as administrator\n` +
+                  `- Check folder permissions in Properties > Security\n`
+                : `- Ensure you have write permissions to the virtual environment directory\n` +
+                  `- Try: chmod -R u+w "${this.getVenvBasePath()}"\n`) +
+              `- Antivirus software may be blocking the installation\n` +
+              `- Restart the application and try again\n\n`;
+          } else if (isDiskSpaceError) {
+            installErrorMsg +=
+              `Insufficient disk space.\n\n` +
+              `Required actions:\n` +
+              `- Free up at least 1GB of disk space\n` +
+              (isWindows()
+                ? `- Run Disk Cleanup (search in Start menu)\n`
+                : `- Run: df -h to check available space\n`) +
+              `- Delete temporary files or move large files to another drive\n` +
+              `- Restart the application after freeing up space\n\n`;
+          } else {
+            installErrorMsg +=
+              `Possible causes and solutions:\n` +
+              `- Network connectivity issues:\n` +
+              `  • Check your internet connection\n` +
+              `  • Verify firewall/proxy settings\n` +
+              `- Python or pip installation issues:\n` +
+              `  • Ensure Python 3.10+ is properly installed\n` +
+              `  • Try reinstalling Python from https://www.python.org/downloads/\n` +
+              `- Insufficient disk space:\n` +
+              `  • Ensure at least 1GB of free disk space\n` +
+              `- Antivirus interference:\n` +
+              `  • Temporarily disable antivirus and try again\n` +
+              `- Corrupted package cache:\n` +
+              `  • Clear pip cache: python -m pip cache purge\n\n`;
+          }
+
+          installErrorMsg += `Error details:\n${output.slice(0, 500)}${output.length > 500 ? '...' : ''}`;
+
+          this.emit('error', installErrorMsg);
           resolve(false);
         }
       });
 
       proc.on('error', (err) => {
         console.error('[PythonEnvManager] Error installing deps:', err);
-        this.emit('error', `Failed to install dependencies: ${err.message}`);
+
+        const pipProcessErrorMsg =
+          `Failed to start dependency installation process.\n\n` +
+          `Error: ${err.message}\n\n` +
+          `This usually indicates:\n` +
+          `- The Python virtual environment is corrupted\n` +
+          `- pip is not installed or not accessible\n` +
+          `- System security software is blocking the process\n\n` +
+          `Recommended actions:\n` +
+          `1. Restart the application to recreate the virtual environment\n` +
+          `2. If the issue persists, delete the virtual environment:\n` +
+          `   Location: ${this.getVenvBasePath() || 'undefined'}\n` +
+          `3. Verify Python installation:\n` +
+          (isWindows()
+            ? `   • Open Command Prompt: python -m pip --version\n`
+            : `   • Open terminal: python3 -m pip --version\n`) +
+          `4. Ensure pip is up to date:\n` +
+          (isWindows()
+            ? `   • python -m ensurepip --upgrade\n`
+            : `   • python3 -m ensurepip --upgrade\n`) +
+          `5. Check antivirus settings - add Python to exclusions\n` +
+          `6. If all else fails, reinstall Python 3.10+ from:\n` +
+          `   https://www.python.org/downloads/`;
+
+        this.emit('error', pipProcessErrorMsg);
         resolve(false);
       });
     });
@@ -707,7 +893,19 @@ if sys.version_info >= (3, 12):
             venvExists: false,
             depsInstalled: false,
             usingBundledPackages: false,
-            error: 'Failed to create virtual environment'
+            error:
+              `Python environment initialization failed: Could not create virtual environment.\n\n` +
+              `The detailed error was already displayed above. Common solutions:\n` +
+              `- Install Python 3.10 or higher from https://www.python.org/downloads/\n` +
+              (isLinux()
+                ? `- Install python3-venv package:\n` +
+                  `  • Debian/Ubuntu: sudo apt install python3-venv\n` +
+                  `  • Fedora/RHEL: sudo dnf install python3-venv\n`
+                : '') +
+              `- Ensure at least 500MB of free disk space\n` +
+              `- Check that you have write permissions to the application directory\n` +
+              `- Try restarting the application\n` +
+              `- If using antivirus software, add Python to exclusions`
           };
         }
       } else {
@@ -728,7 +926,20 @@ if sys.version_info >= (3, 12):
             venvExists: true,
             depsInstalled: false,
             usingBundledPackages: false,
-            error: 'Failed to install dependencies'
+            error:
+              `Python environment initialization failed: Could not install dependencies.\n\n` +
+              `The detailed error was already displayed above. Common solutions:\n` +
+              `- Check your internet connection (pip needs to download packages)\n` +
+              `- Verify firewall/proxy settings allow pip to access PyPI\n` +
+              `- Ensure at least 1GB of free disk space\n` +
+              `- Try clearing pip cache:\n` +
+              (isWindows()
+                ? `  python -m pip cache purge\n`
+                : `  python3 -m pip cache purge\n`) +
+              `- Temporarily disable antivirus software\n` +
+              `- If behind a corporate proxy, configure pip:\n` +
+              `  pip config set global.proxy http://your-proxy:port\n` +
+              `- Wait a few minutes and restart the application (PyPI may be temporarily down)`
           };
         }
       } else {
@@ -780,7 +991,30 @@ if sys.version_info >= (3, 12):
       };
     } catch (error) {
       this.isInitializing = false;
-      const message = error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      const unexpectedErrorMsg =
+        `Python environment initialization failed with an unexpected error.\n\n` +
+        `Error: ${errorMessage}\n\n` +
+        `This is an unexpected issue. Please try the following:\n` +
+        `1. Restart the application\n` +
+        `2. Ensure you have:\n` +
+        `   • Python 3.10 or higher installed\n` +
+        `   • At least 1GB of free disk space\n` +
+        `   • Internet connectivity for downloading packages\n` +
+        `   • Write permissions to the application directory\n` +
+        `3. Check system logs for related errors:\n` +
+        (isWindows()
+          ? `   • Event Viewer > Windows Logs > Application\n`
+          : `   • System logs (journalctl or /var/log/)\n`) +
+        `4. If the issue persists:\n` +
+        (app.isPackaged
+          ? `   • Try reinstalling the application\n` +
+            `   • Contact support with the error details above\n`
+          : `   • Check the development console for additional errors\n` +
+            `   • Verify the repository integrity with 'git status'\n`) +
+        `5. Temporarily disable antivirus/security software to rule out interference`;
+
       return {
         ready: false,
         pythonPath: null,
@@ -788,7 +1022,7 @@ if sys.version_info >= (3, 12):
         venvExists: this.venvExists(),
         depsInstalled: false,
         usingBundledPackages: false,
-        error: message
+        error: unexpectedErrorMsg
       };
     }
   }
