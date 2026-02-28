@@ -1,0 +1,28 @@
+{
+  "errors": {
+    "noLanguageSelected": "Please select a language",
+    "translationFailed": "Translation failed"
+  },
+  "languages": {
+    "pt-BR": "Portuguese (Brazil)",
+    "es": "Spanish",
+    "de": "German",
+    "fr": "French"
+  },
+  "accessibility": {
+    "translateButtonAriaLabel": "Translate content",
+    "revertButtonAriaLabel": "Revert to original language",
+    "languageSelectorAriaLabel": "Select target language"
+  },
+  "status": {
+    "translating": "Translating...",
+    "translated": "Translation complete"
+  },
+  "actions": {
+    "translate": "Translate",
+    "revert": "Revert"
+  },
+  "controls": {
+    "selectLanguage": "Select language"
+  }
+}
