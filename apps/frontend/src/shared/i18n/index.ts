@@ -38,6 +38,16 @@ import esTranslation from './locales/es/translation.json';
 // Import German translation resources
 import deCommon from './locales/de/common.json';
 import deTranslation from './locales/de/translation.json';
+import ptBRNavigation from './locales/pt-BR/navigation.json';
+import ptBRSettings from './locales/pt-BR/settings.json';
+import ptBRTasks from './locales/pt-BR/tasks.json';
+import ptBRWelcome from './locales/pt-BR/welcome.json';
+import ptBROnboarding from './locales/pt-BR/onboarding.json';
+import ptBRDialogs from './locales/pt-BR/dialogs.json';
+import ptBRGitlab from './locales/pt-BR/gitlab.json';
+import ptBRTaskReview from './locales/pt-BR/taskReview.json';
+import ptBRTerminal from './locales/pt-BR/terminal.json';
+import ptBRErrors from './locales/pt-BR/errors.json';
 
 export const defaultNS = 'common';
 
@@ -70,15 +80,16 @@ export const resources = {
   },
   'pt-BR': {
     common: ptBRCommon,
-    translation: ptBRTranslation
-  },
-  es: {
-    common: esCommon,
-    translation: esTranslation
-  },
-  de: {
-    common: deCommon,
-    translation: deTranslation
+    navigation: ptBRNavigation,
+    settings: ptBRSettings,
+    tasks: ptBRTasks,
+    welcome: ptBRWelcome,
+    onboarding: ptBROnboarding,
+    dialogs: ptBRDialogs,
+    gitlab: ptBRGitlab,
+    taskReview: ptBRTaskReview,
+    terminal: ptBRTerminal,
+    errors: ptBRErrors
   }
 } as const;
 

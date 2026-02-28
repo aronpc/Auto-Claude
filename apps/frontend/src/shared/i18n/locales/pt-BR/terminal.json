@@ -1,0 +1,58 @@
+{
+  "expand": {
+    "expand": "Expandir terminal",
+    "collapse": "Recolher terminal"
+  },
+  "resume": {
+    "pending": "Retomada Disponível",
+    "pendingTooltip": "Clique para retomar a sessão anterior do Claude",
+    "resumeAllSessions": "Retomar Todas"
+  },
+  "auth": {
+    "terminalTitle": "Autenticação: {{profileName}}",
+    "maxTerminalsReached": "Não é possível abrir terminal de autenticação: número máximo de terminais atingido. Feche um terminal primeiro."
+  },
+  "swap": {
+    "inProgress": "Alternando perfil...",
+    "resumingSession": "Retomando sessão do Claude...",
+    "sessionResumed": "Sessão retomada com o novo perfil",
+    "resumeFailed": "Não foi possível retomar a sessão. Você pode iniciar uma nova sessão.",
+    "noSession": "Perfil alternado. Nenhuma sessão ativa para retomar.",
+    "migrationFailed": "Perfil alternado, mas a migração da sessão falhou. Iniciando terminal limpo."
+  },
+  "worktree": {
+    "create": "Worktree",
+    "createNew": "Nova Worktree",
+    "existing": "Worktrees do Terminal",
+    "taskWorktrees": "Worktrees de Tarefas",
+    "otherWorktrees": "Outras",
+    "createTitle": "Criar Worktree do Terminal",
+    "createDescription": "Crie um espaço de trabalho isolado para este terminal. Todo o trabalho será feito no diretório da worktree.",
+    "name": "Nome da Worktree",
+    "namePlaceholder": "minha-feature",
+    "nameRequired": "O nome da worktree é obrigatório",
+    "nameInvalid": "O nome deve começar e terminar com uma letra ou número",
+    "nameHelp": "Letras minúsculas, números, hifens e underscores (espaços se tornam hifens)",
+    "associateTask": "Vincular à Tarefa",
+    "selectTask": "Selecione uma tarefa...",
+    "noTask": "Sem tarefa (worktree independente)",
+    "createBranch": "Criar Branch Git",
+    "branchHelp": "Cria a branch: {{branch}}",
+    "baseBranch": "Branch Base",
+    "selectBaseBranch": "Selecione a branch base...",
+    "searchBranch": "Buscar branches...",
+    "noBranchFound": "Nenhuma branch encontrada",
+    "useProjectDefault": "Usar padrão do projeto ({{branch}})",
+    "baseBranchHelp": "A branch a partir da qual a worktree será criada",
+    "openInIDE": "Abrir na IDE",
+    "maxReached": "Limite máximo de 12 worktrees de terminal atingido",
+    "alreadyExists": "Já existe uma worktree com este nome",
+    "searchPlaceholder": "Buscar worktrees...",
+    "noResults": "Nenhuma worktree encontrada",
+    "deleteTitle": "Excluir Worktree?",
+    "deleteDescription": "Isso excluirá permanentemente a worktree e sua branch. Quaisquer alterações não commitadas serão perdidas.",
+    "detached": "(desanexada)",
+    "remotePushFailed": "Rastreamento Remoto Não Configurado",
+    "remotePushFailedDescription": "Worktree criada, mas não foi possível enviar a branch para o remoto. Pode ser necessário executar git push -u manualmente."
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "terminal": {
+    "openTerminal": "Abrir terminal",
+    "openInbuilt": "Abrir no Terminal Integrado",
+    "openExternal": "Abrir no Terminal Externo"
+  },
+  "merge": {
+    "branchHasNewCommits": "A branch {{branch}} tem {{count}} novo commit.",
+    "branchHasNewCommits_other": "A branch {{branch}} tem {{count}} novos commits.",
+    "branchHasNewCommitsSinceWorktree": "A branch {{branch}} tem {{count}} novo commit desde que esta worktree foi criada.",
+    "branchHasNewCommitsSinceWorktree_other": "A branch {{branch}} tem {{count}} novos commits desde que esta worktree foi criada.",
+    "filesNeedMerging": "{{count}} arquivo precisa de merge.",
+    "filesNeedMerging_other": "{{count}} arquivos precisam de merge.",
+    "filesNeedIntelligentMerging": "{{count}} arquivo precisará de merge inteligente:",
+    "filesNeedIntelligentMerging_other": "{{count}} arquivos precisarão de merge inteligente:",
+    "branchHasNewCommitsSinceBuild": "A branch {{branch}} tem {{count}} novo commit desde que este build começou.",
+    "branchHasNewCommitsSinceBuild_other": "A branch {{branch}} tem {{count}} novos commits desde que este build começou.",
+    "filesNeedAIMergeDueToRenames": "{{count}} arquivo precisa de merge com IA devido a {{renameCount}} renomeação de arquivo.",
+    "filesNeedAIMergeDueToRenames_other": "{{count}} arquivos precisam de merge com IA devido a {{renameCount}} renomeações de arquivo.",
+    "filesNeedAIMergeDueToRenamesPlural": "{{count}} arquivo precisa de merge com IA devido a {{renameCount}} renomeações de arquivo.",
+    "filesNeedAIMergeDueToRenamesPlural_other": "{{count}} arquivos precisam de merge com IA devido a {{renameCount}} renomeações de arquivo.",
+    "fileRenamesDetected": "{{count}} renomeação de arquivo detectada - a IA cuidará do merge.",
+    "fileRenamesDetected_other": "{{count}} renomeações de arquivo detectadas - a IA cuidará do merge.",
+    "filesRenamedOrMoved": "Arquivos podem ter sido renomeados ou movidos - a IA cuidará do merge.",
+    "alreadyMergedTitle": "Alterações já na sua branch",
+    "alreadyMergedDescription": "Estas alterações parecem já existir na sua branch atual. Você pode marcar esta tarefa como concluída com segurança.",
+    "alreadyMergedTooltip": "As alterações da tarefa já estão presentes na sua branch. Marcar como concluída limpará a worktree sem fazer merge.",
+    "matchingFiles": "Arquivos correspondentes",
+    "supersededTitle": "Alterações substituídas",
+    "supersededDescription": "Sua branch atual tem uma versão mais recente destas alterações. Considere descartar esta tarefa ou visualizar a comparação.",
+    "supersededCompareTooltip": "Veja uma comparação detalhada para ver como a branch atual difere das alterações desta tarefa.",
+    "supersededDiscardTooltip": "Remova a worktree desta tarefa, pois as alterações não são mais necessárias.",
+    "status": {
+      "branchDiverged": "Branch Divergiu",
+      "aiWillResolve": "IA resolverá",
+      "filesRenamed": "Arquivos Renomeados",
+      "branchBehind": "Branch Atrasada",
+      "readyToMerge": "Pronto para merge",
+      "files": "arquivos",
+      "file": "arquivo",
+      "conflict": "conflito",
+      "conflicts": "conflitos",
+      "details": "Detalhes",
+      "refresh": "Atualizar",
+      "stageOnly": "Apenas preparar (revisar na IDE antes de commitar)",
+      "discardBuild": "Descartar build"
+    },
+    "buttons": {
+      "stageWithAIMerge": "Preparar com Merge de IA",
+      "mergeWithAI": "Merge com IA",
+      "stageTo": "Preparar para {{branch}}",
+      "mergeTo": "Merge para {{branch}}",
+      "resolving": "Resolvendo...",
+      "staging": "Preparando...",
+      "merging": "Fazendo merge...",
+      "completing": "Concluindo..."
+    },
+    "actions": {
+      "markAsDone": "Marcar como Concluída",
+      "discardTask": "Descartar Tarefa",
+      "viewComparison": "Ver Comparação"
+    }
+  },
+  "pr": {
+    "title": "Criar Pull Request",
+    "description": "Enviar branch e criar um pull request para \"{{taskTitle}}\"",
+    "errors": {
+      "unknown": "Ocorreu um erro desconhecido ao criar o pull request",
+      "invalidBranchName": "O nome da branch contém caracteres inválidos. Use apenas letras, números, hífens (-), underscores (_) e barras (/).",
+      "emptyTitle": "O título do pull request não pode estar vazio."
+    },
+    "success": {
+      "created": "Pull request criado com sucesso!",
+      "alreadyExists": "Já existe um pull request para esta branch"
+    },
+    "actions": {
+      "retry": "Tentar novamente",
+      "creating": "Criando PR...",
+      "create": "Criar Pull Request"
+    },
+    "labels": {
+      "sourceBranch": "Branch de origem",
+      "targetBranch": "Branch de destino",
+      "commits": "Commits",
+      "changes": "Alterações",
+      "prTitle": "Título do PR (opcional)",
+      "draftPR": "Criar como PR rascunho",
+      "unknown": "Desconhecido"
+    },
+    "hints": {
+      "targetBranch": "Deixe vazio para usar a branch padrão",
+      "prTitle": "Deixe vazio para usar o título da tarefa"
+    }
+  },
+  "mergeProgress": {
+    "stages": {
+      "analyzing": "Analisando alterações",
+      "detectingConflicts": "Detectando conflitos",
+      "resolving": "Resolvendo conflitos",
+      "validating": "Validando merge",
+      "complete": "Merge concluído",
+      "error": "Merge falhou",
+      "stalled": "Merge travado"
+    },
+    "conflictCounter": "{{found}} encontrados, {{resolved}} resolvidos",
+    "currentFile": "Arquivo atual",
+    "viewLogs": "Ver logs",
+    "hideLogs": "Ocultar logs",
+    "logTypes": {
+      "info": "Informação",
+      "warning": "Aviso",
+      "error": "Erro",
+      "conflict": "Conflito",
+      "resolution": "Resolução"
+    },
+    "completionMessage": "Todas as alterações foram mescladas com sucesso.",
+    "errorMessage": "Ocorreu um erro durante o processo de merge."
+  },
+  "bulkPR": {
+    "title": "Criar Pull Requests",
+    "description": "Criar pull requests para {{count}} tarefas selecionadas",
+    "creating": "Criando PR {{current}} de {{total}}...",
+    "creatingPR": "Criando PR {{current}} de {{total}}",
+    "resultsDescription": "{{success}} com sucesso, {{failed}} com falha",
+    "tasksToProcess": "Tarefas a processar",
+    "targetBranchHint": "Deixe vazio para usar a branch padrão de cada tarefa. Isso será aplicado a todos os PRs.",
+    "createAll": "Criar {{count}} PRs",
+    "completed": "concluído",
+    "succeeded": "com sucesso",
+    "failed": "com falha",
+    "skipped": "ignorado",
+    "alreadyExisted": "já existia",
+    "noWorktree": "Nenhuma worktree encontrada para esta tarefa",
+    "resultsDescriptionWithSkipped": "{{success}} com sucesso, {{skipped}} ignorados, {{failed}} com falha"
+  }
+}
