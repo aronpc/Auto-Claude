@@ -1,0 +1,72 @@
+{
+  "languages": {
+    "en": "Inglés",
+    "fr": "Francés",
+    "pt-BR": "Portugués (Brasil)",
+    "es": "Español",
+    "de": "Alemán"
+  },
+  "controls": {
+    "translate": "Traducir",
+    "translating": "Traduciendo...",
+    "revert": "Revertir",
+    "reverting": "Revirtiendo...",
+    "selectLanguage": "Seleccionar idioma",
+    "translateTo": "Traducir a {{language}}",
+    "currentLanguage": "Idioma actual: {{language}}",
+    "originalLanguage": "Idioma original",
+    "translatedTo": "Traducido a {{language}}"
+  },
+  "status": {
+    "translating": "Traduciendo contenido...",
+    "translated": "Traducido exitosamente",
+    "reverting": "Revirtiendo a idioma original...",
+    "reverted": "Revertido a idioma original",
+    "cached": "Traducción en caché (rápida)",
+    "fresh": "Nueva traducción (puede tomar algunos segundos)"
+  },
+  "errors": {
+    "translationFailed": "Traducción fallida",
+    "translationFailedDescription": "No se pudo traducir el contenido. Por favor, inténtelo de nuevo.",
+    "revertFailed": "Reversión fallida",
+    "revertFailedDescription": "No se pudo revertir al idioma original.",
+    "languageNotSupported": "Idioma no soportado",
+    "noContentToTranslate": "No hay contenido para traducir",
+    "rateLimitError": "Límite de tasa alcanzado",
+    "rateLimitErrorDescription": "Demasiadas solicitudes de traducción. Por favor, espere un momento.",
+    "networkError": "Error de red",
+    "networkErrorDescription": "Verifique su conexión a internet e inténtelo de nuevo.",
+    "invalidContent": "Contenido inválido",
+    "invalidContentDescription": "El contenido no pudo ser procesado para traducción."
+  },
+  "messages": {
+    "selectLanguageToTranslate": "Seleccione un idioma para traducir este contenido",
+    "translationInProgress": "Traducción en progreso, por favor espere...",
+    "translationComplete": "¡Traducción completa!",
+    "viewingTranslation": "Viendo traducción en {{language}}",
+    "viewingOriginal": "Viendo contenido original",
+    "noTranslationsAvailable": "No hay traducciones disponibles",
+    "availableTranslations": "Traducciones disponibles: {{languages}}",
+    "translationCached": "Esta traducción fue cargada desde caché"
+  },
+  "contentTypes": {
+    "roadmap": "Hoja de ruta",
+    "idea": "Idea",
+    "changelog": "Registro de cambios",
+    "spec": "Especificación"
+  },
+  "actions": {
+    "clearTranslations": "Limpiar traducciones",
+    "clearingTranslations": "Limpiando traducciones...",
+    "translationsCleared": "Traducciones limpiadas",
+    "confirmClearTranslations": "¿Está seguro de que desea limpiar todas las traducciones para este contenido?",
+    "retryTranslation": "Reintentar traducción"
+  },
+  "accessibility": {
+    "translateButtonAriaLabel": "Traducir contenido a {{language}}",
+    "revertButtonAriaLabel": "Revertir a idioma original",
+    "languageSelectorAriaLabel": "Seleccionar idioma de traducción",
+    "translationStatusAriaLabel": "Estado de traducción: {{status}}",
+    "clearTranslationsAriaLabel": "Limpiar todas las traducciones"
+  }
+}
