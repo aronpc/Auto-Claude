@@ -27,6 +27,18 @@ import frTaskReview from './locales/fr/taskReview.json';
 import frTerminal from './locales/fr/terminal.json';
 import frErrors from './locales/fr/errors.json';
 
+// Import Portuguese (Brazil) translation resources
+import ptBRCommon from './locales/pt-BR/common.json';
+import ptBRTranslation from './locales/pt-BR/translation.json';
+
+// Import Spanish translation resources
+import esCommon from './locales/es/common.json';
+import esTranslation from './locales/es/translation.json';
+
+// Import German translation resources
+import deCommon from './locales/de/common.json';
+import deTranslation from './locales/de/translation.json';
+
 export const defaultNS = 'common';
 
 export const resources = {
@@ -55,6 +67,18 @@ export const resources = {
     taskReview: frTaskReview,
     terminal: frTerminal,
     errors: frErrors
+  },
+  'pt-BR': {
+    common: ptBRCommon,
+    translation: ptBRTranslation
+  },
+  es: {
+    common: esCommon,
+    translation: esTranslation
+  },
+  de: {
+    common: deCommon,
+    translation: deTranslation
   }
 } as const;
 
@@ -65,7 +89,7 @@ i18n
     lng: 'en', // Default language (will be overridden by settings)
     fallbackLng: 'en',
     defaultNS,
-    ns: ['common', 'navigation', 'settings', 'tasks', 'welcome', 'onboarding', 'dialogs', 'gitlab', 'taskReview', 'terminal', 'errors'],
+    ns: ['common', 'navigation', 'settings', 'tasks', 'welcome', 'onboarding', 'dialogs', 'gitlab', 'taskReview', 'terminal', 'errors', 'translation'],
     interpolation: {
       escapeValue: false // React already escapes values
     },
