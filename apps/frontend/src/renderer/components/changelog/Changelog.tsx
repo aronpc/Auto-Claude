@@ -4,6 +4,7 @@ import { ChangelogHeader } from './ChangelogHeader';
 import { ChangelogFilters } from './ChangelogFilters';
 import { ChangelogList } from './ChangelogList';
 import { Step2ConfigureGenerate, Step3ReleaseArchive } from './ChangelogDetails';
+import { TranslationControl } from '../translation/TranslationControl';
 import { useChangelog } from './hooks/useChangelog';
 
 export function Changelog() {
@@ -147,41 +148,58 @@ export function Changelog() {
           </div>
         )}
         {step === 2 && (
-          <Step2ConfigureGenerate
-            sourceMode={sourceMode}
-            selectedTaskIds={selectedTaskIds}
-            doneTasks={doneTasks}
-            previewCommits={previewCommits}
-            existingChangelog={existingChangelog}
-            version={version}
-            versionReason={versionReason}
-            date={date}
-            format={format}
-            audience={audience}
-            emojiLevel={emojiLevel}
-            customInstructions={customInstructions}
-            generationProgress={generationProgress}
-            generatedChangelog={generatedChangelog}
-            isGenerating={isGenerating}
-            error={error}
-            showAdvanced={showAdvanced}
-            saveSuccess={saveSuccess}
-            copySuccess={copySuccess}
-            canGenerate={canGenerate}
-            canSave={canSave}
-            onBack={handleBack}
-            onVersionChange={setVersion}
-            onDateChange={setDate}
-            onFormatChange={setFormat}
-            onAudienceChange={setAudience}
-            onEmojiLevelChange={setEmojiLevel}
-            onCustomInstructionsChange={setCustomInstructions}
-            onShowAdvancedChange={setShowAdvanced}
-            onGenerate={handleGenerate}
-            onSave={handleSave}
-            onCopy={handleCopy}
-            onChangelogEdit={updateGeneratedChangelog}
-          />
+          <>
+            {/* Translation Control - shown when a changelog is generated */}
+            {generatedChangelog && (
+              <div className="px-4 py-3 border-b bg-background">
+                <TranslationControl
+                  contentType="changelog"
+                  contentId={version || 'draft'}
+                  content={{ text: generatedChangelog }}
+                  onTranslated={(translatedContent) => {
+                    updateGeneratedChangelog(translatedContent.text as string);
+                  }}
+                  compact={true}
+                />
+              </div>
+            )}
+
+            <Step2ConfigureGenerate
+              sourceMode={sourceMode}
+              selectedTaskIds={selectedTaskIds}
+              doneTasks={doneTasks}
+              previewCommits={previewCommits}
+              existingChangelog={existingChangelog}
+              version={version}
+              versionReason={versionReason}
+              date={date}
+              format={format}
+              audience={audience}
+              emojiLevel={emojiLevel}
+              customInstructions={customInstructions}
+              generationProgress={generationProgress}
+              generatedChangelog={generatedChangelog}
+              isGenerating={isGenerating}
+              error={error}
+              showAdvanced={showAdvanced}
+              saveSuccess={saveSuccess}
+              copySuccess={copySuccess}
+              canGenerate={canGenerate}
+              canSave={canSave}
+              onBack={handleBack}
+              onVersionChange={setVersion}
+              onDateChange={setDate}
+              onFormatChange={setFormat}
+              onAudienceChange={setAudience}
+              onEmojiLevelChange={setEmojiLevel}
+              onCustomInstructionsChange={setCustomInstructions}
+              onShowAdvancedChange={setShowAdvanced}
+              onGenerate={handleGenerate}
+              onSave={handleSave}
+              onCopy={handleCopy}
+              onChangelogEdit={updateGeneratedChangelog}
+            />
+          </>
         )}
         {step === 3 && selectedProjectId && (
           <Step3ReleaseArchive
