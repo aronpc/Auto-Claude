@@ -119,13 +119,13 @@
     "states": {
       "opened": "Aberto",
       "closed": "Fechado",
-      "merged": "Merged",
+      "merged": "Mesclado",
       "locked": "Bloqueado"
     },
     "filters": {
       "opened": "Abertos",
       "closed": "Fechados",
-      "merged": "Merged",
+      "merged": "Mesclados",
       "all": "Todos"
     }
   },
