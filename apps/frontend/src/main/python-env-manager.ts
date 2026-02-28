@@ -264,6 +264,55 @@ if sys.version_info >= (3, 12):
   }
 
   /**
+   * Validate that the venv module is available in the given Python installation.
+   * The venv module is required to create virtual environments.
+   *
+   * @param pythonPath - The Python executable path to validate
+   * @returns Validation result with status and error message
+   */
+  private validateVenvModule(pythonPath: string): {
+    valid: boolean;
+    message: string;
+  } {
+    try {
+      // Check if venv module is available by running --help
+      execSync(`"${pythonPath}" -m venv --help`, {
+        stdio: 'pipe',
+        timeout: 5000,
+        windowsHide: true
+      });
+
+      console.log(`[PythonEnvManager] venv module validation passed for: ${pythonPath}`);
+      return {
+        valid: true,
+        message: 'venv module is available'
+      };
+    } catch (error) {
+      console.warn(`[PythonEnvManager] venv module not found in: ${pythonPath}`);
+
+      // Provide platform-specific installation instructions
+      let errorMsg = `Python virtual environment creation failed: 'venv' module not found.\n\n`;
+
+      if (isLinux()) {
+        errorMsg +=
+          `On Debian/Ubuntu: sudo apt install python3-venv\n` +
+          `On Fedora/RHEL: sudo dnf install python3-venv\n` +
+          `On other systems: ensure Python 3.10+ is installed with venv support.`;
+      } else {
+        errorMsg +=
+          `Ensure Python 3.10+ is installed with venv support.\n` +
+          `Download from: https://www.python.org/downloads/\n\n` +
+          `Note: The venv module is included with standard Python installations.`;
+      }
+
+      return {
+        valid: false,
+        message: errorMsg
+      };
+    }
+  }
+
+  /**
    * Create the virtual environment
    */
   private async createVenv(): Promise<boolean> {
@@ -280,6 +329,14 @@ if sys.version_info >= (3, 12):
           'This is required for development mode. Download from:\n' +
           'https://www.python.org/downloads/';
       this.emit('error', errorMsg);
+      return false;
+    }
+
+    // Validate venv module is available before attempting to create venv
+    const venvValidation = this.validateVenvModule(systemPython);
+    if (!venvValidation.valid) {
+      console.error('[PythonEnvManager] venv module validation failed:', venvValidation.message);
+      this.emit('error', venvValidation.message);
       return false;
     }
 
