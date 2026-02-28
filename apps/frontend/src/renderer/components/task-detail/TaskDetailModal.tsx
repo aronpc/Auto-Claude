@@ -43,6 +43,7 @@ import { TaskSubtasks } from './TaskSubtasks';
 import { TaskLogs } from './TaskLogs';
 import { TaskFiles } from './TaskFiles';
 import { TaskReview } from './TaskReview';
+import { TranslationControl } from '../translation/TranslationControl';
 import type { Task, WorktreeCreatePROptions } from '../../../shared/types';
 
 interface TaskDetailModalProps {
@@ -420,6 +421,17 @@ function TaskDetailModalContent({ open, task, onOpenChange, onSwitchToTerminals,
                       )}
                     </div>
                   </DialogPrimitive.Description>
+
+                  {/* Translation Control */}
+                  <div className="mt-3">
+                    <TranslationControl
+                      contentType="spec"
+                      contentId={task.id}
+                      content={task as unknown as Record<string, unknown>}
+                      compact
+                    />
+                  </div>
+
                   {window.DEBUG && (
                     <div className="mt-1 text-[11px] text-muted-foreground font-mono">
                       status={task.status} reviewReason={task.reviewReason ?? 'none'} phase={task.executionProgress?.phase ?? 'none'} reviewRequired={task.metadata?.requireReviewBeforeCoding ? 'true' : 'false'}
