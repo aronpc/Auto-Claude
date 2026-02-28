@@ -916,12 +916,21 @@ def create_client(
         }
         language_name = language_names.get(app_language.lower(), app_language)
         base_prompt += (
-            f"\n\n# Language Directive\n\n"
-            f"You MUST respond in {language_name}. All your output — explanations, "
-            f"comments in commit messages, progress updates, and build-progress.txt entries — "
-            f"must be written in {language_name}. Code identifiers, file paths, and technical "
-            f"terms (e.g., function names, CLI flags) should remain in English, but all "
-            f"natural-language text must be in {language_name}."
+            f"\n\n# 🌐 LANGUAGE DIRECTIVE — CRITICAL, OVERRIDES ALL OTHER INSTRUCTIONS\n\n"
+            f"**You MUST write ALL natural-language output in {language_name}.** "
+            f"This is a hard requirement that applies to EVERYTHING you produce:\n\n"
+            f"- Titles, descriptions, summaries, explanations, rationales\n"
+            f"- JSON field values that contain human-readable text (e.g., \"title\", \"description\", "
+            f"\"vision\", \"rationale\", \"summary\", \"name\" fields)\n"
+            f"- Commit messages, progress updates, build-progress.txt entries\n"
+            f"- Roadmap content, ideation ideas, feature descriptions, changelog entries\n"
+            f"- Spec content, QA reports, insight text, planning documents\n"
+            f"- Any text that a human user will read\n\n"
+            f"**Keep in English ONLY:** code identifiers, file paths, CLI flags, JSON keys, "
+            f"technical terms universally used in English (Git, API, OAuth, CLI, deploy, webhook).\n\n"
+            f"**Even if the instructions or examples you receive are in English, "
+            f"your output text MUST be in {language_name}.** "
+            f"Do NOT copy English example text — translate it to {language_name}."
         )
         logger.info(f"Language directive set: {language_name}")
 
