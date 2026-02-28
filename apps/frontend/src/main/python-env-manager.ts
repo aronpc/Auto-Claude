@@ -1,5 +1,5 @@
 import { spawn, execSync, ChildProcess } from 'child_process';
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync, access, constants, mkdirSync } from 'fs';
 import path from 'path';
 import { EventEmitter } from 'events';
 import { app } from 'electron';
@@ -313,6 +313,91 @@ if sys.version_info >= (3, 12):
   }
 
   /**
+   * Validate write permissions for venv destination directory.
+   * Checks if the parent directory (or the venv directory itself if it exists) is writable.
+   *
+   * @param venvPath - The path where the venv will be created
+   * @returns Validation result with status and error message
+   */
+  private async validateVenvWritePermissions(venvPath: string): Promise<{
+    valid: boolean;
+    message: string;
+  }> {
+    try {
+      // Determine which directory to check for write permissions
+      const dirToCheck = existsSync(venvPath) ? venvPath : path.dirname(venvPath);
+
+      // Ensure the parent directory exists before checking permissions
+      if (!existsSync(dirToCheck)) {
+        try {
+          mkdirSync(dirToCheck, { recursive: true });
+          console.log(`[PythonEnvManager] Created directory: ${dirToCheck}`);
+        } catch (mkdirError) {
+          const errorMsg =
+            `Cannot create directory for Python virtual environment.\n\n` +
+            `Path: ${dirToCheck}\n\n` +
+            `Error: ${mkdirError instanceof Error ? mkdirError.message : String(mkdirError)}\n\n` +
+            `Possible solutions:\n` +
+            `- Ensure you have write permissions to the parent directory\n` +
+            `- Try running the application with appropriate permissions\n` +
+            (isLinux() ? `- On Linux: Check directory ownership with 'ls -la' and use 'chmod' if needed\n` : '') +
+            (isWindows() ? `- On Windows: Check folder permissions in Properties > Security\n` : '');
+
+          return {
+            valid: false,
+            message: errorMsg
+          };
+        }
+      }
+
+      // Check write permissions using fs.access with W_OK constant
+      return new Promise((resolve) => {
+        access(dirToCheck, constants.W_OK, (err) => {
+          if (err) {
+            const errorMsg =
+              `Python virtual environment directory is not writable.\n\n` +
+              `Path: ${dirToCheck}\n\n` +
+              `Error: ${err.message}\n\n` +
+              `Possible solutions:\n` +
+              `- Ensure you have write permissions to this directory\n` +
+              (isLinux()
+                ? `- On Linux: Use 'chmod u+w "${dirToCheck}"' to add write permissions\n` +
+                  `- Or choose a different directory in your home folder\n`
+                : '') +
+              (isWindows()
+                ? `- On Windows: Right-click the folder > Properties > Security > Edit permissions\n` +
+                  `- Or choose a different directory\n`
+                : '') +
+              `- Contact your system administrator if you're on a managed system`;
+
+            console.error(
+              `[PythonEnvManager] Write permission check failed for: ${dirToCheck}`,
+              err
+            );
+
+            resolve({
+              valid: false,
+              message: errorMsg
+            });
+          } else {
+            console.log(`[PythonEnvManager] Write permission validation passed for: ${dirToCheck}`);
+            resolve({
+              valid: true,
+              message: 'Directory is writable'
+            });
+          }
+        });
+      });
+    } catch (error) {
+      console.error('[PythonEnvManager] Unexpected error during permission validation:', error);
+      return {
+        valid: false,
+        message: `Failed to validate write permissions: ${error instanceof Error ? error.message : String(error)}`
+      };
+    }
+  }
+
+  /**
    * Create the virtual environment
    */
   private async createVenv(): Promise<boolean> {
@@ -340,8 +425,19 @@ if sys.version_info >= (3, 12):
       return false;
     }
 
-    this.emit('status', 'Creating Python virtual environment...');
+    // Validate write permissions for venv destination directory
     const venvPath = this.getVenvBasePath()!;
+    const permissionValidation = await this.validateVenvWritePermissions(venvPath);
+    if (!permissionValidation.valid) {
+      console.error(
+        '[PythonEnvManager] Write permission validation failed:',
+        permissionValidation.message
+      );
+      this.emit('error', permissionValidation.message);
+      return false;
+    }
+
+    this.emit('status', 'Creating Python virtual environment...');
     console.warn('[PythonEnvManager] Creating venv at:', venvPath, 'with:', systemPython);
 
     return new Promise((resolve) => {
